@@ -8,6 +8,14 @@ int main()
 {
 	using namespace SystemColors;
 
+	bool isDark = IsDarkMode();
+
+	std::cout << "Dark " << isDark << '\n';
+
+	bool isLight = IsLightMode();
+
+	std::cout << "Light " << isLight << '\n';
+
 	COLORREF c = GetAccentColor();
 
 	std::cout << (int)GetRValue(c) << ' ' << (int)GetGValue(c) << ' ' << (int)GetBValue(c) << '\n';

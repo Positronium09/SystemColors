@@ -6,6 +6,28 @@ using PGetImmersiveColorTypeFromName = int (WINAPI*)(const WCHAR* name);
 using PGetImmersiveUserColorSetPreference = int (WINAPI*)(bool bForceCheckRegistry, bool bSkipCheckOnFail);
 
 
+bool SystemColors::IsDarkMode()
+{
+	DWORD32 value = 0;
+	DWORD size = sizeof(DWORD32);
+
+	auto res = RegGetValue(
+		HKEY_CURRENT_USER,
+		TEXT("Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"),
+		TEXT("AppsUseLightTheme"),
+		RRF_RT_REG_DWORD,
+		nullptr,
+		&value,
+		&size);
+
+	return !(bool)value;
+}
+
+bool SystemColors::IsLightMode()
+{
+	return !IsDarkMode();
+}
+
 COLORREF SystemColors::GetColor(const WCHAR* name)
 {
 	HMODULE hUxTheme = LoadLibrary(TEXT("uxtheme.dll"));

@@ -7,6 +7,8 @@
 
 namespace SystemColors
 {
+	bool IsDarkMode();
+	bool IsLightMode();
 	COLORREF GetColor(const WCHAR* name);
 
 	COLORREF GetAccentColor();
