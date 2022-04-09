@@ -1,67 +1,72 @@
 #include "systemcolors.h"
 
 
-typedef COLORREF(WINAPI* PGetImmersiveColorFromColorSetEx)(UINT dwImmersiveColorSet, UINT dwImmersiveColorType, bool bIgnoreHighContrast, UINT dwHighContrastCacheMode);
-typedef int (WINAPI* PGetImmersiveColorTypeFromName)(const WCHAR* name);
-typedef int (WINAPI* PGetImmersiveUserColorSetPreference)(bool bForceCheckRegistry, bool bSkipCheckOnFail);
-
-HMODULE hUxTheme = LoadLibrary(TEXT("uxtheme.dll"));
-
-PGetImmersiveColorFromColorSetEx GetImmersiveColorFromColorSetEx = (PGetImmersiveColorFromColorSetEx)GetProcAddress(hUxTheme, MAKEINTRESOURCEA(95));
-PGetImmersiveColorTypeFromName GetImmersiveColorTypeFromName = (PGetImmersiveColorTypeFromName)GetProcAddress(hUxTheme, MAKEINTRESOURCEA(96));
-PGetImmersiveUserColorSetPreference GetImmersiveUserColorSetPreference = (PGetImmersiveUserColorSetPreference)GetProcAddress(hUxTheme, MAKEINTRESOURCEA(98));
+using PGetImmersiveColorFromColorSetEx = COLORREF(WINAPI*)(UINT dwImmersiveColorSet, UINT dwImmersiveColorType, bool bIgnoreHighContrast, UINT dwHighContrastCacheMode);
+using PGetImmersiveColorTypeFromName = int (WINAPI*)(const WCHAR* name);
+using PGetImmersiveUserColorSetPreference = int (WINAPI*)(bool bForceCheckRegistry, bool bSkipCheckOnFail);
 
 
-COLORREF GetAccentColor()
+COLORREF SystemColors::GetColor(const WCHAR* name)
 {
-	return GetImmersiveColorFromColorSetEx(GetImmersiveUserColorSetPreference(false, false), 
-		GetImmersiveColorTypeFromName(L"ImmersiveSystemAccent"), false, 0);
+	HMODULE hUxTheme = LoadLibrary(TEXT("uxtheme.dll"));
+
+	if (hUxTheme)
+	{
+		PGetImmersiveColorFromColorSetEx GetImmersiveColorFromColorSetEx = (PGetImmersiveColorFromColorSetEx)GetProcAddress(hUxTheme, MAKEINTRESOURCEA(95));
+		PGetImmersiveColorTypeFromName GetImmersiveColorTypeFromName = (PGetImmersiveColorTypeFromName)GetProcAddress(hUxTheme, MAKEINTRESOURCEA(96));
+		PGetImmersiveUserColorSetPreference GetImmersiveUserColorSetPreference = (PGetImmersiveUserColorSetPreference)GetProcAddress(hUxTheme, MAKEINTRESOURCEA(98));
+
+		COLORREF color = GetImmersiveColorFromColorSetEx(GetImmersiveUserColorSetPreference(false, false),
+			GetImmersiveColorTypeFromName(name), false, 0);
+
+		FreeLibrary(hUxTheme);
+
+		return color;
+	}
+	return 0;
 }
 
-COLORREF GetAccentColorDark1()
+COLORREF SystemColors::GetAccentColor()
 {
-	return GetImmersiveColorFromColorSetEx(GetImmersiveUserColorSetPreference(false, false),
-		GetImmersiveColorTypeFromName(L"ImmersiveSystemAccentDark1"), false, 0);
+	return GetColor(L"ImmersiveSystemAccent");
 }
 
-COLORREF GetAccentColorDark2()
+COLORREF SystemColors::GetAccentColorDark1()
 {
-	return GetImmersiveColorFromColorSetEx(GetImmersiveUserColorSetPreference(false, false),
-		GetImmersiveColorTypeFromName(L"ImmersiveSystemAccentDark2"), false, 0);
+	return GetColor(L"ImmersiveSystemAccentDark1");
 }
 
-COLORREF GetAccentColorDark3()
+COLORREF SystemColors::GetAccentColorDark2()
 {
-	return GetImmersiveColorFromColorSetEx(GetImmersiveUserColorSetPreference(false, false),
-		GetImmersiveColorTypeFromName(L"ImmersiveSystemAccentDark3"), false, 0);
+	return GetColor(L"ImmersiveSystemAccentDark2");
 }
 
-COLORREF GetAccentColorLight1()
+COLORREF SystemColors::GetAccentColorDark3()
 {
-	return GetImmersiveColorFromColorSetEx(GetImmersiveUserColorSetPreference(false, false),
-		GetImmersiveColorTypeFromName(L"ImmersiveSystemAccentLight1"), false, 0);
+	return GetColor(L"ImmersiveSystemAccentDark3");
 }
 
-COLORREF GetAccentColorLight2()
+COLORREF SystemColors::GetAccentColorLight1()
 {
-	return GetImmersiveColorFromColorSetEx(GetImmersiveUserColorSetPreference(false, false),
-		GetImmersiveColorTypeFromName(L"ImmersiveSystemAccentLight2"), false, 0);
+	return GetColor(L"ImmersiveSystemAccentLight1");
 }
 
-COLORREF GetAccentColorLight3()
+COLORREF SystemColors::GetAccentColorLight2()
 {
-	return GetImmersiveColorFromColorSetEx(GetImmersiveUserColorSetPreference(false, false),
-		GetImmersiveColorTypeFromName(L"ImmersiveSystemAccentLight3"), false, 0);
+	return GetColor(L"ImmersiveSystemAccentLight2");
 }
 
-COLORREF GetTextColor()
+COLORREF SystemColors::GetAccentColorLight3()
 {
-	return GetImmersiveColorFromColorSetEx(GetImmersiveUserColorSetPreference(false, false),
-		GetImmersiveColorTypeFromName(L"ImmersiveSystemText"), false, 0);
+	return GetColor(L"ImmersiveSystemAccentLight3");
 }
 
-COLORREF GetBackgroundColor()
+COLORREF SystemColors::GetTextColor()
 {
-	return GetImmersiveColorFromColorSetEx(GetImmersiveUserColorSetPreference(false, false),
-		GetImmersiveColorTypeFromName(L"ImmersiveSystemBackground"), false, 0);
+	return GetColor(L"ImmersiveSystemText");
+}
+
+COLORREF SystemColors::GetBackgroundColor()
+{
+	return GetColor(L"ImmersiveSystemBackground");
 }

@@ -5,13 +5,18 @@
 #include <windows.h>
 
 
-COLORREF GetAccentColor();
-COLORREF GetAccentColorDark1();
-COLORREF GetAccentColorDark2();
-COLORREF GetAccentColorDark3();
-COLORREF GetAccentColorLight1();
-COLORREF GetAccentColorLight2();
-COLORREF GetAccentColorLight3();
+namespace SystemColors
+{
+	COLORREF GetColor(const WCHAR* name);
 
-COLORREF GetTextColor();
-COLORREF GetBackgroundColor();
+	COLORREF GetAccentColor();
+	COLORREF GetAccentColorDark1();
+	COLORREF GetAccentColorDark2();
+	COLORREF GetAccentColorDark3();
+	COLORREF GetAccentColorLight1();
+	COLORREF GetAccentColorLight2();
+	COLORREF GetAccentColorLight3();
+
+	COLORREF GetTextColor();
+	COLORREF GetBackgroundColor();
+}

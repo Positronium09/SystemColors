@@ -6,6 +6,8 @@
 
 int main()
 {
+	using namespace SystemColors;
+
 	COLORREF c = GetAccentColor();
 
 	std::cout << (int)GetRValue(c) << ' ' << (int)GetGValue(c) << ' ' << (int)GetBValue(c) << '\n';
