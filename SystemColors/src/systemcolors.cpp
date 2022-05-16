@@ -11,7 +11,7 @@ bool SystemColors::IsDarkMode()
 	DWORD32 value = 0;
 	DWORD size = sizeof(DWORD32);
 
-	auto res = RegGetValue(
+	(void)RegGetValue(
 		HKEY_CURRENT_USER,
 		TEXT("Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"),
 		TEXT("AppsUseLightTheme"),
